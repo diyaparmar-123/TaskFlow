@@ -11,6 +11,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// ✅ ROOT ROUTE (IMPORTANT)
+app.get('/', (req, res) => {
+  res.send('TaskFlow API is running 🚀');
+});
+
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok', version: '1.0.0' }));
 
@@ -30,11 +35,16 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
+// ✅ DO NOT CRASH SERVER
 initDB()
   .then(() => {
-    app.listen(PORT, () => console.log(`🚀 TaskFlow API running on port ${PORT}`));
+    console.log("✅ DB connected");
   })
   .catch(err => {
-    console.error('Failed to init DB:', err);
-    process.exit(1);
+    console.error("❌ DB connection failed:", err.message);
   });
+
+// 🚀 ALWAYS START SERVER (IMPORTANT)
+app.listen(PORT, () => {
+  console.log(`🚀 TaskFlow API running on port ${PORT}`);
+});
